@@ -8,8 +8,13 @@ char board[3][3] = {
     {' ', ' ', ' '}
 };
 
+/*
+ * Function: draw_board
+ * --------------------
+ * Draw the tic tac toe board in the console
+ */
 void draw_board() {
-        printf("\\   1   2   3\n");
+    printf("\\   1   2   3\n");
     printf("  +---+---+---+\n");
     printf("1 | %c | %c | %c |\n", board[0][0], board[0][1], board[0][2]);
     printf("  +---+---+---+\n");
@@ -22,13 +27,13 @@ void draw_board() {
 /*
  * Function: check_win 
  * --------------------
- * check if the game is won
+ * Check if the game is won
  *
- *  returns: the state of the game
- *           -1 -> the game ended in a tie
- *           0 -> the game ended and O won
- *           1 -> the game ended and X won
- *           2 -> the game is in-progress
+ * returns: the state of the game
+ *          -1 -> the game ended in a tie
+ *          0 -> the game ended and O won
+ *          1 -> the game ended and X won
+ *          2 -> the game is in-progress
  */
 int check_win() {
     int row, col, empty_cells = 0;
@@ -86,11 +91,18 @@ int check_win() {
     }
 }
 
+/*
+ * Function: is_board_full 
+ * --------------------
+ * Check if the board is full
+ *
+ * returns: the state of the board
+ *          0 -> the board is not full
+ *          1 -> the board is full
+ */
 int is_board_full() {
-    int row, col;
-
-    for (row = 0; row < 3; row++) {
-        for (col = 0; col < 3; col++) {
+    for (int row = 0; row < 3; row++) {
+        for (int col = 0; col < 3; col++) {
             if (board[row][col] == ' ') {
                 return 0;
             }
@@ -99,72 +111,63 @@ int is_board_full() {
     return 1;
 }
 
+/*
+ * Function: minimax 
+ * --------------------
+ * Recursively evaluate all possible moves from the current game state, constructing a game tree. At each level of the tree,
+ * it alternates between maximizing the score for the player and minimizing the score for the opponent.
+ * 
+ *  returns: the move score
+ */
 int minimax(int depth, int is_maximizing)
 {
     int score = check_win();
     if (score == 1) {
         return 10 - depth;
-    }
-    else if (score == 0) {
+    } else if (score == 0) {
         return score - 10;
-    }
-    else if (score == -1 && is_board_full()) {
+    } else if (score == -1 && is_board_full()) {
         return 0;
     }
 
-    // If this maximizer's move
-    if (is_maximizing)
-    {
+    if (is_maximizing) {
+        // If this maximizer's move
         int best = -1000;
 
-        // Traverse all cells
-        for (int i = 0; i<3; i++)
+        for (int row = 0; row<3; row++)
         {
-            for (int j = 0; j<3; j++)
+            for (int col = 0; col<3; col++)
             {
-                // Check if cell is empty
-                if (board[i][j]==' ')
-                {
-                    // Make the move
-                    board[i][j] = player;
+                if (board[row][col]==' ') {
+                    board[row][col] = player;
 
-                    // Call minimax recursively and choose
-                    // the maximum value
-                    
+                    // Call minimax recursively and choose the maximum value
                     int result = minimax(depth+1, !is_maximizing);
                     best = best >= result ? best : result;
 
-                    // Undo the move
-                    board[i][j] = ' ';
+                    board[row][col] = ' ';
+                }
             }
         }
-    }
         return best;
-    }
-
-    // If this minimizer's move
-    else
-    {
+    } else {
+        // If this minimizer's move
         int best = 1000;
 
-        // Traverse all cells
-        for (int i = 0; i<3; i++)
+        for (int row = 0; row<3; row++)
         {
-            for (int j = 0; j<3; j++)
+            for (int col = 0; col<3; col++)
             {
                 // Check if cell is empty
-                if (board[i][j]==' ')
-                {
-                    // Make the move
-                    board[i][j] = opponent;
+                if (board[row][col]==' ') {
+                    board[row][col] = opponent;
 
                     // Call minimax recursively and choose
                     // the minimum value
                     int result = minimax(depth+1, !is_maximizing);
                     best = best <= result ? best : result;
 
-                    // Undo the move
-                    board[i][j] = ' ';
+                    board[row][col] = ' ';
                 }
             }
         }
@@ -172,6 +175,11 @@ int minimax(int depth, int is_maximizing)
     }
 }
 
+/*
+ * Function: random_move 
+ * --------------------
+ * Pick a random move that is not yet been taken
+ */
 void random_move() {
     int row, col;
 
@@ -183,6 +191,11 @@ void random_move() {
     board[row][col] = opponent;
 }
 
+/*
+ * Function: medium_difficulty 
+ * --------------------
+ * Medium AI difficulty that tries to win or block a player from winning
+ */
 void medium_difficulty() {
     int row, col;
 
@@ -249,11 +262,15 @@ void medium_difficulty() {
     random_move();
 }
 
+/*
+ * Function: hard_difficulty 
+ * --------------------
+ * Hard AI difficulty that uses minimax algorithm to make optimal moves
+ */
 void hard_difficulty() {
-    int i, j;
     int best_score = -1000;
     int move_score;
-    int best_i, best_j;
+    int best_row, best_col;
     
     // take center if available
     if (board[1][1] == ' ') {
@@ -261,34 +278,37 @@ void hard_difficulty() {
         return;
     } 
 
-    for (i = 0; i < 3; i++) {
-        for (j = 0; j < 3; j++) {
-            if (board[i][j] == ' ') {
-                board[i][j] = player;
+    for (int row = 0; row < 3; row++) {
+        for (int col = 0; col < 3; col++) {
+            if (board[row][col] == ' ') {
+                board[row][col] = player;
                 move_score = minimax(0, 0);
                 // uncomment to see the scoring in action
-                // printf("score: %d i: %d j: %d\n", move_score, i, j);
-                board[i][j] = ' ';
+                // printf("score: %d row: %d col: %d\n", move_score, row, col);
+                board[row][col] = ' ';
                 if (move_score > best_score) {
                     best_score = move_score;
-                    best_i = i;
-                    best_j = j;
+                    best_row = row;
+                    best_col = col;
                 }
             }
         }
     }
 
-    board[best_i][best_j] = opponent;
+    board[best_row][best_col] = opponent;
 }
 
+/*
+ * Function: ai_move 
+ * --------------------
+ * Determine the next AI move depending on the difficulty 
+ */
 void ai_move(int difficulty) {
-    if (difficulty == 1) {  // Easy difficulty: make random moves
+    if (difficulty == 1) {
         random_move();
-    }
-    else if (difficulty == 2) {  // Medium difficulty: try to win, or block player from winning
+    } else if (difficulty == 2) {
 		medium_difficulty();
-    }
-    else {  // Hard difficulty: use minimax algorithm to make optimal moves
+    } else {
         hard_difficulty();
     }
 }
@@ -319,12 +339,10 @@ int main() {
                     board[row-1][col-1] = player;
                     turn = 1;
                     moves++;
-                }
-                else {
+                } else {
                     printf("Invalid move. Please try again.\n");
                 }
-            }
-            else {
+            } else {
                 printf("AI is thinking...\n");
                 ai_move(difficulty);
                 turn = 0;
@@ -339,11 +357,9 @@ int main() {
 
     if (winner == 1) {
         printf("Congratulations! You win!\n");
-    }
-    else if (winner == 0) {
+    } else if (winner == 0) {
         printf("Sorry, you lose. Better luck next time.\n");
-    }
-    else {
+    } else {
         printf("It's a tie!\n");
     }
 
