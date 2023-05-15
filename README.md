@@ -10,5 +10,12 @@ The game of Tic Tac Toe is a two-player, zero-sum game, meaning that there are t
 
 Tic Tac Toe is a relatively simple game, and its rules and winning conditions can be easily implemented in code. It can be a good exercise for beginners learning programming, as it involves basic data structures and control flow logic. Overall, Tic Tac Toe is a classic game that has stood the test of time and continues to be enjoyed by people of all ages.
 
+## Minimax Algorithm
+The Minimax algorithm is a **decision-making algorithm** commonly used in two-player, zero-sum games such as chess, tic-tac-toe, and checkers. Its purpose is to determine the optimal move for a player, assuming that the opponent plays optimally as well.
+
+This algorithm works by recursively evaluating all possible moves from the current game state, constructing a game tree. At each level of the tree, it alternates between maximizing the score for the player and minimizing the score for the opponent. Scores are assigned to terminal states (win, loss, or draw) and propagated up the tree.
+
+Minimax uses **depth-first search**, exploring all possible paths before backtracking. It continues until reaching a specified depth or encountering a terminal state.
+
 ## Disclaimer
 This code is provided for educational purposes only and is not intended for any commercial use. The code is provided as-is, without any warranty or support. The author of the code shall not be liable for any damages or losses arising from the use of the code, including but not limited to direct, indirect, incidental, or consequential damages. The code is intended for practice and learning purposes only and should not be used for any production or commercial purposes. The user of the code is responsible for ensuring that the code is used in compliance with all applicable laws and regulations.
