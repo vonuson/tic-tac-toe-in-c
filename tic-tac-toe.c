@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 char player = 'X', opponent = 'O';
 char board[3][3] = {
@@ -182,12 +183,33 @@ int minimax(int depth, int is_maximizing)
  */
 void random_move() {
     int row, col;
+    int empty_cells = 0;
+    int available_moves[9][2];
 
-    do {
-        row = rand() % 3;
-        col = rand() % 3;
-    } while (board[row][col] != ' ');
+    // Find available moves
+    for (row = 0; row < 3; row++) {
+        for (col = 0; col < 3; col++) {
+            if (board[row][col] == ' ') {
+                available_moves[empty_cells][0] = row;
+                available_moves[empty_cells][1] = col;
+                empty_cells++;
+            }
+        }
+    }
 
+    if (empty_cells == 0) {
+        return; 
+    }
+
+    // Seed the random number generator with current time
+    srand(time(NULL));
+
+    // Generate a random index within the available moves
+    int random_index = rand() % empty_cells;
+
+    // Make the random move
+    row = available_moves[random_index][0];
+    col = available_moves[random_index][1];
     board[row][col] = opponent;
 }
 
